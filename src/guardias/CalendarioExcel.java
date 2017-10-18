@@ -27,11 +27,16 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 public class CalendarioExcel {
 
     private List<DiaCalendario> listadoDiasCalendario;
-    private static final int COMIENZO_FILAS = 1;
+    
+    //Se elimina la cabecera
+    private static final int FILA_DEFINICION_GUARDIAS_PREVISTAS = 1;
+    private static final int COMIENZO_FILAS = 2;
     private static final int COLUMNA_FECHA_MES = 0;
     private static final int COLUMNA_FESTIVO = 2;
     private static final int COLUMNA_PETICION = 8;
 
+    private static final Double ERROR_GUARDIA_PREVISTA = -1.0;
+    
     private static final String ES_FESTIVO = "F";
 
     public static final String PETICION_SILVIA = "S";
@@ -40,20 +45,18 @@ public class CalendarioExcel {
     public static final String PETICION_NURIA = "N";
     public static final String PETICION_CAROLINA = "C";
 
-    public static final String CONSTANTE_FIESTA = "FIESTA";
+    public static final String CONSTANTE_FIESTA = "LIBRE";
     public static final String CONSTANTE_CONSULTA = "CONSULTA";
 
     private static final Logger LOGGER = Logger.getLogger(CalendarioExcel.class.getName());
 
-    private List<Medico> listadoMedicos;
 
     public CalendarioExcel(String ccalendarioxls, List<Medico> listaMedicos) {
-        setListadoMedicos(listaMedicos);
         File excel = new File(ccalendarioxls);
-        this.leerExcelFile(excel);
+        this.leerExcelFile(excel, listaMedicos);
     }
 
-    private void leerExcelFile(File excelFile) {
+    private void leerExcelFile(File excelFile, List<Medico> listadoMedicos) {
         InputStream excelStream = null;
         try {
             excelStream = new FileInputStream(excelFile);
@@ -69,6 +72,8 @@ public class CalendarioExcel {
             Date cellCalendario;
             String cellFestivo;
             String cellPeticion;
+            
+            this.leerGuardiasPrevistas(hssfSheet.getRow(FILA_DEFINICION_GUARDIAS_PREVISTAS), listadoMedicos);
 
             List<DiaCalendario> listadoDias = new ArrayList<>();
             // Para este ejemplo vamos a recorrer las filas obteniendo los datos que queremos            
@@ -102,7 +107,7 @@ public class CalendarioExcel {
                         }
 
                         //No se tiene en cuenta que tipo de falta tiene (solo tiene que estar vacio)
-                        this.obtenerDisponibilidadMedicosEnExcel(listadoMedicos, hssfRow, diaCalendario);
+                        this.obtenerDisponibilidadMedicosEnExcel(listadoMedicos, hssfRow, diaCalendario, listadoMedicos);
 
 
                         cellPeticion = hssfRow.getCell(COLUMNA_PETICION) == null ? "" : hssfRow.getCell(COLUMNA_PETICION).getStringCellValue();
@@ -130,12 +135,23 @@ public class CalendarioExcel {
     }
 
 
-    private void obtenerDisponibilidadMedicosEnExcel(List<Medico> listaMedicos, HSSFRow hssfRow, DiaCalendario diaCalendario) throws ExceptionColumnaDisponibilidad {
+    private void leerGuardiasPrevistas(HSSFRow row, List<Medico> listaMedicos) {
         for (Medico medico : listaMedicos) {
-            this.comprobarDisponibilidadExcel(hssfRow, diaCalendario, medico.getColumnaExcelDisponibilidad(), medico.getSiglaExcel());
+            medico.setTotalGuardiasPrevistasPeriodo(this.obtenerGuardiasPrevistasExcel(row, medico.getColumnaExcel()));
         }
     }    
-    private void comprobarDisponibilidadExcel(HSSFRow hssfRow, DiaCalendario diaCalendario, int opcionDisponible, String siglaMedico) throws ExceptionColumnaDisponibilidad {
+
+    private int obtenerGuardiasPrevistasExcel(HSSFRow row, int columnaMedico) {
+        Double d = row.getCell(columnaMedico) == null ? ERROR_GUARDIA_PREVISTA : row.getCell(columnaMedico).getNumericCellValue();
+        return d.intValue();
+    }
+    
+    private void obtenerDisponibilidadMedicosEnExcel(List<Medico> listaMedicos, HSSFRow hssfRow, DiaCalendario diaCalendario, List<Medico> listadoMedicos) throws ExceptionColumnaDisponibilidad {
+        for (Medico medico : listaMedicos) {
+            this.comprobarDisponibilidadExcel(hssfRow, diaCalendario, medico.getColumnaExcel(), medico.getSiglaExcel(), listadoMedicos);
+        }
+    }    
+    private void comprobarDisponibilidadExcel(HSSFRow hssfRow, DiaCalendario diaCalendario, int opcionDisponible, String siglaMedico, List<Medico> listadoMedicos) throws ExceptionColumnaDisponibilidad {
         if (hssfRow.getCell(opcionDisponible) == null || "".equals(hssfRow.getCell(opcionDisponible).getStringCellValue())) {
             Medico medico = Medico.getMedicoPorSigla(listadoMedicos, siglaMedico);
             diaCalendario.agregarMedicoDisponible(medico);
@@ -151,13 +167,5 @@ public class CalendarioExcel {
 
     public void setListadoDiasCalendario(List<DiaCalendario> listadoDiasCalendario) {
         this.listadoDiasCalendario = listadoDiasCalendario;
-    }
-
-    public List<Medico> getListadoMedicos() {
-        return listadoMedicos;
-    }
-
-    public void setListadoMedicos(List<Medico> listadoMedicos) {
-        this.listadoMedicos = listadoMedicos;
     }
 }

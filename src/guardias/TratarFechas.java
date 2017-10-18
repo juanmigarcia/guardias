@@ -22,7 +22,7 @@ public class TratarFechas {
     public static String getStringDate(DiaCalendario diaCalendario) {
         Calendar calendarDia = Calendar.getInstance();
         calendarDia.setTime(diaCalendario);
-        
+
         return calendarDia.get(Calendar.DAY_OF_MONTH) + "/" + (calendarDia.get(Calendar.MONTH) + AJUSTE_MESES) + "/" + calendarDia.get(Calendar.YEAR);
     }
 
@@ -30,6 +30,7 @@ public class TratarFechas {
         Calendar calendarDia = Calendar.getInstance();
         calendarDia.setTime(calendar);
         int dayOfWeek = calendarDia.get(Calendar.DAY_OF_WEEK);
+
         return Calendar.SUNDAY == dayOfWeek || Calendar.SATURDAY == dayOfWeek;
     }
 }

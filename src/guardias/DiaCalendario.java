@@ -23,6 +23,7 @@ public class DiaCalendario extends Date {
 
     public void agregarMedicoDisponible(Medico medico) {
         this.listadoMedicosDisponibles.add(medico);
+        medico.agregarDiaDisponible();
     }
 
     public String getPeticionMedico() {

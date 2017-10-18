@@ -14,30 +14,30 @@ import java.util.List;
 public class Medico {
 
     private String siglaExcel;
-    private int columnaExcelDisponibilidad;
+    private int columnaExcel;
     private String nombre;
     private String apellido1;
     private String apellido2;
 
     private int totalGuardiasRealizadasPeriodo;
     private int totalGuardiasPrevistasPeriodo;
-
+    private int totalDiasDisponiblesPendientesPeriodo;
+    
     //Sabados
-    private int totalGuardiasAcumuladasNivel1Anyo;
+    //private int totalGuardiasAcumuladasNivel1Anyo;
     //Viernes y Domingos
-    private int totalGuardiasAcumuladasNivel2Anyo;
+    //private int totalGuardiasAcumuladasNivel2Anyo;
     //Resto de semana
-    private int totalGuardiasAcumuladasNivel3Anyo;
+    //private int totalGuardiasAcumuladasNivel3Anyo;
     private List libranzas;
 
-    public Medico(String nombr, String apel1, String apel2, String siglExcel, int totalGuardiasPrevistasPeriodo, int columnaExcelDisponibilidad) {
+    public Medico(String nombr, String apel1, String apel2, String siglExcel, int columnaExcel) {
         this.setNombre(nombr);
         this.setApellido1(apel1);
         this.setApellido2(apel2);
         this.setSiglaExcel(siglExcel);
         this.setTotalGuardiasRealizadasPeriodo(0);
-        this.setTotalGuardiasPrevistasPeriodo(totalGuardiasPrevistasPeriodo);
-        this.setColumnaExcelDisponibilidad(columnaExcelDisponibilidad);
+        this.setColumnaExcel(columnaExcel);
     }
 
     public void agregarGuardiaAnyo() {
@@ -55,6 +55,10 @@ public class Medico {
             }
         }
         return null;
+    }
+    
+    public int getGuardiasPendientesPorHacer(){
+        return this.getTotalGuardiasPrevistasPeriodo()-this.getTotalGuardiasRealizadasPeriodo();
     }
 
     public String getSiglaExcel() {
@@ -112,7 +116,7 @@ public class Medico {
     public void setTotalGuardiasPrevistasPeriodo(int totalGuardiasPrevistasPeriodo) {
         this.totalGuardiasPrevistasPeriodo = totalGuardiasPrevistasPeriodo;
     }
-
+/*
     public int getTotalGuardiasAcumuladasNivel1Anyo() {
         return totalGuardiasAcumuladasNivel1Anyo;
     }
@@ -135,13 +139,25 @@ public class Medico {
 
     public void setTotalGuardiasAcumuladasNivel3Anyo(int totalGuardiasAcumuladasNivel3Anyo) {
         this.totalGuardiasAcumuladasNivel3Anyo = totalGuardiasAcumuladasNivel3Anyo;
+    }*/
+
+    public int getColumnaExcel() {
+        return columnaExcel;
     }
 
-    public int getColumnaExcelDisponibilidad() {
-        return columnaExcelDisponibilidad;
+    public void setColumnaExcel(int columnaExcel) {
+        this.columnaExcel = columnaExcel;
+    }
+   
+    public void agregarDiaDisponible(){
+        this.setTotalDiasDisponiblesPendientesPeriodo(this.getTotalDiasDisponiblesPendientesPeriodo()+1);
     }
 
-    public void setColumnaExcelDisponibilidad(int columnaExcelDisponibilidad) {
-        this.columnaExcelDisponibilidad = columnaExcelDisponibilidad;
+    public int getTotalDiasDisponiblesPendientesPeriodo() {
+        return totalDiasDisponiblesPendientesPeriodo;
+    }
+
+    public void setTotalDiasDisponiblesPendientesPeriodo(int totalDiasDisponiblesPendientesPeriodo) {
+        this.totalDiasDisponiblesPendientesPeriodo = totalDiasDisponiblesPendientesPeriodo;
     }
 }

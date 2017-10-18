@@ -21,8 +21,10 @@ public class Guardia {
     }
 
     public void setMedicoAsignado(Medico medicoAsignado) {
-        this.medicoAsignado = medicoAsignado;
-        this.medicoAsignado.agregarGuardiaAnyo();
+        if(medicoAsignado!=null) {
+            this.medicoAsignado = medicoAsignado;
+            this.medicoAsignado.agregarGuardiaAnyo();
+        }
     }
 
     public DiaCalendario getDiaCalendario() {
@@ -40,10 +42,14 @@ public class Guardia {
         for (Medico medicoDisponible : listadoMedicosDisponibles) {
             strMedicosDisponibles += (medicoDisponible.getNombreCompleto() + " ");
         }
+        String strMedicoAsignado = "";
+        if(this.getMedicoAsignado()!=null) {
+            strMedicoAsignado = this.getMedicoAsignado().getNombreCompleto();
+        }
 
         return TratarFechas.getStringDate(diaCalendario) + " "
                 + ((diaCalendario.getEsFestivo() || diaCalendario.getEsFinde()) ? "FIESTA" : "LABORAL")
-                + " asignado a " + this.getMedicoAsignado().getNombreCompleto()
+                + " asignado a " + strMedicoAsignado
                 + " | medicos disponibles " + strMedicosDisponibles;
     }
 

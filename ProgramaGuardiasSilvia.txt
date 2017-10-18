@@ -1,0 +1,23 @@
+Se intenta que no se tengan guardias antes de las consultas
+
+
+- El usuario pueda poner guardias determinados dias fijos
+- El usuario pueda poner dias que no va a hacer guardias
+
+- Establecer prioridades de dias, por ejemplo, Sabado dia que mas vale, Viernes y domingo igual y el resto de semana menos
+- Calcular guardias aleatorias
+
+Datos de entrada:
+Leer excel (en el excel estará el calendario anual con dias semanales y festivos)
+Medicos con sus peticiones de guardias y dias que no pueden
+
+Random medico
+Random dias
+
+
+
+1- Se fijan peticiones (puede haber 2 peticiones)
+2- Se buscan los que estan disponibles (que no sea consulta, que no tenga ausencia por vacas) y de entre los que estan libres se hace aleaatorio (o el que mas le faltan por hacer ese mes) teniendo en cuenta que el dia de antes no haya hecho guardia
+3- Se puede intentar que no repita dia de la semana en el mismo mes
+4- Intentar poner a cada persona las guardias que le corresponden (buscar el mismo numero de guardias para todos excepto Roberto que tiene mas guardias)
+5- Tener en cuenta para meses futuros las guardias que ha hecho anteriormente
